@@ -9,18 +9,15 @@ use App\Models\Comment;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // 1. Membuat 3 Kategori Utama (Poin 1.a)
+        // 1. Membuat 3 Kategori Utama
         Category::factory(3)->create();
 
-        // 2. Membuat 30 Artikel Acak (Poin 1.b)
+        // 2. Membuat 30 Artikel
         Article::factory(30)->create();
 
-        // 3. Mengisi setiap artikel dengan 10 sampai 20 komentar acak (Poin 1.c)
+        // 3. Mengisi komentar acak pada setiap artikel
         Article::all()->each(function ($article) {
             $jumlahKomentar = rand(10, 20);
             Comment::factory($jumlahKomentar)->create([
