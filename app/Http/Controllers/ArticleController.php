@@ -21,6 +21,12 @@ class ArticleController extends Controller
             });
         }
 
+        if ($request->has('category') && $request->category != '') {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('name', $request->category);
+            });
+        }
+
         if ($request->has('sort')) {
             if ($request->sort == 'az') {
                 $query->orderBy('title', 'asc');
@@ -30,7 +36,9 @@ class ArticleController extends Controller
         }
 
         $articles = $query->get();
-        return view('articles.index', compact('articles'));
+        $categories = Category::all();
+
+        return view('articles.index', compact('articles', 'categories'));
     }
 
     public function show($slug)
@@ -50,7 +58,8 @@ class ArticleController extends Controller
             'body' => $request->body
         ]);
 
-        return back()->with('success', 'Komentar berhasil diubah!');
+        $articleSlug = $comment->article->slug;
+        return redirect()->route('articles.show', $articleSlug)->with('success', 'Komentar berhasil diubah!');
     }
 
     public function destroyComment($id)
